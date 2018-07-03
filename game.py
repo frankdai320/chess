@@ -75,24 +75,24 @@ class Game(ndb.Model):
         if self.board.is_game_over():
             if self.board.is_checkmate():
                 name = self.black_name if self.board.turn else self.white_name
-                message(self.black, "%s wins by checkmate!" % name)
-                message(self.white, "%s wins by checkmate!" % name)
+                message(self.black, "%s wins by checkmate" % name)
+                message(self.white, "%s wins by checkmate" % name)
 
             if self.board.is_stalemate():
-                message(self.black, "Stalemate!")
-                message(self.white, "Stalemate!")
+                message(self.black, "Stalemate")
+                message(self.white, "Stalemate")
 
             if self.board.is_insufficient_material():
-                message(self.black, "Insufficient material!")
-                message(self.white, "Insufficient material!")
+                message(self.black, "Insufficient material")
+                message(self.white, "Insufficient material")
 
             if self.board.is_seventyfive_moves():
-                message(self.black, "Draw by 75-move rule!")
-                message(self.white, "Draw by 75-move rule!")
+                message(self.black, "Draw by 75-move rule")
+                message(self.white, "Draw by 75-move rule")
 
             if self.board.is_fivefold_repetition():
-                message(self.black, "Draw by repetition!")
-                message(self.white, "Draw by repetition!")
+                message(self.black, "Draw by repetition")
+                message(self.white, "Draw by repetition")
 
             self.game_over()
             return

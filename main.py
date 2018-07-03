@@ -56,6 +56,10 @@ def main():
     return ""
 
 def handle(sender_id, m):
+    if sender_id == LEON_ID:
+        message(FRANK_ID, "Leon: " + m)
+    elif sender_id == FRANK_ID:
+        message(LEON_ID, "Frank: " + m)
     game = Game.query(ndb.OR(Game.white == sender_id, Game.black == sender_id)).get()
     if m.split()[0].lower() == 'play':
         if game:

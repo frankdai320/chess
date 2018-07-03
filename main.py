@@ -12,11 +12,12 @@ Game = game.Game
 
 app = Flask(__name__)
 
-VERIFY_TOKEN = ""
-ACCESS_TOKEN = ""
+from secret import VERIFY_TOKEN, ACCESS_TOKEN, FRANK_ID, LEON_ID
+VERIFY_TOKEN = "ccf5247b293d9027863ea880ea0a40d8"
+ACCESS_TOKEN = "EAACsJo6iTY0BAPJ0oKWFA0XyDaNUbIh57gmKvJdzniDyt2HTCYivEjoeoFWou4L8CEHLMp3IXRmdXka511ng1ipMIb1oAN6nCgyxFpMmEcNakAGj62B9Mf9O5xzsUKsuj2nyRBZCjxEZBUhXZCqSyRVkuIoTt2xTSGH3eR4LwZDZD"
 
-FRANK_ID = ""
-LEON_ID = ""
+FRANK_ID = "1915527718468764"
+LEON_ID = "1852482611478518"
 
 # some debugging commands
 @app.route('/leon/<command>')

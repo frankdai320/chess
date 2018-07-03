@@ -176,6 +176,7 @@ class Game(ndb.Model):
                 if str(e) == "Illegal move.":
                     return
                 message(player, str(e))
+                return
 
             self.board.push(m)
             self.send_updates()

@@ -4,9 +4,7 @@ import chess.svg
 from google.appengine.ext import ndb
 
 import parse
-
-# returns the BoardState of the initial chess position
-def initial_boardstate():
+def default_boardstate():
     board = chess.Board()
     return chess._BoardState(board).__dict__
 
@@ -50,9 +48,9 @@ class Game(ndb.Model):
     move_stack = ndb.JsonProperty(required=True, default=[])
     board_stack = ndb.JsonProperty(required=True, default=[])
 
-    board_state = ndb.JsonProperty(required=True, default=initial_boardstate())
+    board_state = ndb.JsonProperty(required=True, default=default_boardstate())
 
-    def update_in_database(self):
+    def set(self):
         if self.board.is_game_over():
             return
         self.move_stack = [move.__dict__ for move in self.board.move_stack]
@@ -70,10 +68,10 @@ class Game(ndb.Model):
         return self._board
 
     def send_updates(self):
-        from main import send_svg, message
+        from main import send_image, message
         board = chess.svg.board(self.board)
-        send_svg(self.black, self.board, 'b')
-        send_svg(self.white, self.board, 'w')
+        send_image(self.black, self.board, 'b')
+        send_image(self.white, self.board, 'w')
         if self.board.is_game_over():
             if self.board.is_checkmate():
                 name = self.black_name if self.board.turn else self.white_name
@@ -110,7 +108,6 @@ class Game(ndb.Model):
 
     def handle(self, player, command):
         from main import message
-
         if command == "undo":
             if player == self.white:
                 self.white_undo = True
@@ -119,7 +116,7 @@ class Game(ndb.Model):
 
             if self.white_undo and self.black_undo:
                 self.board.pop()
-                self.update_in_database()
+                self.set()
                 message(self.black, "Undo successful!")
                 message(self.white, "Undo successful!")
                 self.send_updates()
@@ -130,7 +127,7 @@ class Game(ndb.Model):
                 else:
                     message(self.black, "Requested undo!")
                     message(self.white, "%s has requested an undo!" % self.black_name)
-            self.update_in_database()
+            self.put()
 
         elif command == "resign":
             if player == self.white:
@@ -186,7 +183,7 @@ class Game(ndb.Model):
             self.black_undo = False
             self.white_draw = False
             self.black_draw = False
-            self.update_in_database()
+            self.set()
 
     def game_over(self):
         self.key.delete()

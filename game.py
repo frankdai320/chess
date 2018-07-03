@@ -117,35 +117,35 @@ class Game(ndb.Model):
             if self.white_undo and self.black_undo:
                 self.board.pop()
                 self.set()
-                message(self.black, "Undo successful!")
-                message(self.white, "Undo successful!")
+                message(self.black, "Undo successful")
+                message(self.white, "Undo successful")
                 self.send_updates()
             else:
                 if player == self.white:
-                    message(self.white, "Requested undo!")
-                    message(self.black, "%s has requested an undo!" % self.white_name)
+                    message(self.white, "Requested undo")
+                    message(self.black, "%s has requested an undo" % self.white_name)
                 else:
-                    message(self.black, "Requested undo!")
-                    message(self.white, "%s has requested an undo!" % self.black_name)
+                    message(self.black, "Requested undo")
+                    message(self.white, "%s has requested an undo" % self.black_name)
             self.put()
 
         elif command == "resign":
             if player == self.white:
-                message(self.white, "You resigned!")
-                message(self.black, "%s resigned!" % self.white_name)
+                message(self.white, "You resigned")
+                message(self.black, "%s resigned" % self.white_name)
             else:
-                message(self.black, "You resigned!")
-                message(self.white, "%s resigned!" % self.black_name)
+                message(self.black, "You resigned")
+                message(self.white, "%s resigned" % self.black_name)
             self.game_over()
             
         elif command == "draw":
             if self.board.can_claim_draw():
                 if player == self.white:
-                    message(self.white, "Draw claimed!")
-                    message(self.black, "%s claimed a draw!" % self.white_name)
+                    message(self.white, "Draw claimed")
+                    message(self.black, "%s claimed a draw" % self.white_name)
                 else:
-                    message(self.black, "Draw claimed!")
-                    message(self.white, "%s claimed a draw!" % self.black_name)
+                    message(self.black, "Draw claimed")
+                    message(self.white, "%s claimed a draw" % self.black_name)
 
             if player == self.white:
                 self.white_draw = True
@@ -153,17 +153,17 @@ class Game(ndb.Model):
                 self.black_draw = True
 
             if self.white_draw and self.black_draw:
-                message(self.black, "Draw accepted!")
-                message(self.white, "Draw accepted!")
+                message(self.black, "Draw accepted")
+                message(self.white, "Draw accepted")
                 self.game_over()
                 
             else:
                 if player == self.white:
-                    message(self.white, "Requested draw!")
-                    message(self.black, "%s has requested an draw!" % self.white_name)
+                    message(self.white, "Requested draw")
+                    message(self.black, "%s has requested an draw" % self.white_name)
                 else:
-                    message(self.black, "Requested draw!")
-                    message(self.white, "%s has requested an draw!" % self.black_name)
+                    message(self.black, "Requested draw")
+                    message(self.white, "%s has requested an draw" % self.black_name)
 
                 self.put()
         else:
@@ -173,8 +173,9 @@ class Game(ndb.Model):
             try:
                 m = parse.parse_san(self.board, command)
             except ValueError as e:
+                if str(e) == "Illegal move.":
+                    return
                 message(player, str(e))
-                return
 
             self.board.push(m)
             self.send_updates()

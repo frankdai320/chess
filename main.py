@@ -57,13 +57,20 @@ def main():
 
 def handle(sender_id, m):
     if sender_id == LEON_ID:
-        message(FRANK_ID, "Leon: " + m)
+        message(FRANK_ID,  m)
     elif sender_id == FRANK_ID:
-        message(LEON_ID, "Frank: " + m)
+        message(LEON_ID, m)
     game = Game.query(ndb.OR(Game.white == sender_id, Game.black == sender_id)).get()
+    if m == 'help':
+        message(sender_id, "'play white/black' start a game with a specific color"
+                           "'play' start a game with a random color"
+                           "'draw' offer or claim draw"
+                           "'resign' resign"
+                           "'undo' offer or accept undo")
+
     if m.split()[0].lower() == 'play':
         if game:
-            message(sender_id, "You are already in a game!")
+            message(sender_id, "You are already in a game")
             return
         if m.split()[1].lower() == 'white':
             if sender_id == LEON_ID:
@@ -88,8 +95,6 @@ def handle(sender_id, m):
     game = Game.query(ndb.OR(Game.white == sender_id, Game.black == sender_id)).get()
     if game:
         game.handle(sender_id, m)
-    else:
-        message(sender_id, 'You are not in a game, use "play white/black/random" to start a game!')
 
 
 def name(user_id):
